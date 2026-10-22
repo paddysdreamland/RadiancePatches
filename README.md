@@ -1,7 +1,5 @@
 # Radiance Patches
 
-A Paddy's Dreamland™ mod for NeoForge 1.21.1.
-
 A bundle of fixes for [Radiance](https://github.com/Minecraft-Radiance/Radiance), the Vulkan ray tracing renderer. It loads next to the official Radiance jar, so Radiance itself is never modified. Not affiliated with the Radiance team.
 
 ## What it fixes
