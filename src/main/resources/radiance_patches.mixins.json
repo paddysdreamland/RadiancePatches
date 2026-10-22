@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.paddysdreamland.radiancepatches.mixin",
+  "plugin": "dev.paddysdreamland.radiancepatches.RadiancePatchesMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "veil.LevelRendererMixin",
+    "texid.GlStateManagerMixin",
+    "texid.TextureUtilMixin",
+    "emf.EntityRenderDispatcherMixin",
+    "emf.BlockEntityRenderDispatcherMixin",
+    "emf.EMFModelPartMixin",
+    "radiance.EntityProxyStageMixin",
+    "radiance.EntityProxyPatchMixin",
+    "radiance.AuxiliaryTexturesMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

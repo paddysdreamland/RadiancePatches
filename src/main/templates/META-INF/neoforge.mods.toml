@@ -1,0 +1,47 @@
+modLoader="javafml"
+loaderVersion="${loader_version_range}"
+license="${mod_license}"
+
+[[mods]]
+modId="${mod_id}"
+version="${mod_version}"
+displayName="${mod_name}"
+authors="${mod_authors}"
+description='''
+A bundle of fixes for Radiance, the Vulkan ray tracing renderer.
+Each fix can be turned off in config/radiance_patches.properties.
+
+- Veil: no crash when Veil (Create Aeronautics, Levitite) draws vanilla chunk layers
+- Texture ids: no crash when mods create thousands of textures (Xaero's World Map and others)
+- Entity Model Features: parts with their own texture no longer float at the camera
+- Level render models: models drawn by mods during level render events (Create Overpressure tubes, CarryOn) are ray traced instead of painted flat on top
+- Block entities: no crash when the list of block entities changes while Radiance reads it
+- Modded villagers: profession and level layers from mods no longer hide under the base skin
+- PBR maps: _s, _n and _f maps also work for textures in blockentity, block_entity, ctm, liquid and fluid folders
+
+A Paddy's Dreamland™ mod. Not affiliated with the Radiance team.
+'''
+
+[[mixins]]
+config="radiance_patches.mixins.json"
+
+[[dependencies.${mod_id}]]
+    modId="neoforge"
+    type="required"
+    versionRange="[${neo_version},)"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.${mod_id}]]
+    modId="minecraft"
+    type="required"
+    versionRange="${minecraft_version_range}"
+    ordering="NONE"
+    side="CLIENT"
+
+[[dependencies.${mod_id}]]
+    modId="radiance"
+    type="required"
+    versionRange="[0.1.6-alpha,)"
+    ordering="AFTER"
+    side="CLIENT"

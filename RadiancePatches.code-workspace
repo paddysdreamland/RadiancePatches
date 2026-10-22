@@ -1,0 +1,68 @@
+// Open this file in VS Code (double-click it, or File > Open Workspace from File...).
+// The tasks are under Terminal > Run Task... and "Copy mod into modpack" is also Ctrl+Shift+B.
+// Every run also saves its full output to build-log.txt in this folder, so Claude can read it if something fails.
+{
+  "folders": [
+    {
+      "path": "."
+    }
+  ],
+  "settings": {
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.import.gradle.wrapper.enabled": true,
+    "files.exclude": {
+      "**/.gradle": true,
+      "**/build": true
+    },
+    "java.compile.nullAnalysis.mode": "automatic"
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Copy mod into modpack",
+        "detail": "Builds the mod, puts the jar into the modpack's mods folder and moves the old single-fix jars out",
+        "type": "shell",
+        "command": "./gradlew copyToModpack",
+        "windows": {
+          "command": ".\\gradlew.bat copyToModpack 2>&1 | Tee-Object -FilePath build-log.txt",
+          "options": { "shell": { "executable": "powershell.exe", "args": ["-NoProfile", "-Command"] } }
+        },
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Build mod",
+        "detail": "Builds the jar into build/libs without copying it anywhere",
+        "type": "shell",
+        "command": "./gradlew build",
+        "windows": {
+          "command": ".\\gradlew.bat build 2>&1 | Tee-Object -FilePath build-log.txt",
+          "options": { "shell": { "executable": "powershell.exe", "args": ["-NoProfile", "-Command"] } }
+        },
+        "group": "build",
+        "problemMatcher": []
+      },
+      {
+        "label": "Clean build files",
+        "detail": "Deletes the build folder. Use this if something gets stuck",
+        "type": "shell",
+        "command": "./gradlew clean",
+        "windows": {
+          "command": ".\\gradlew.bat clean 2>&1 | Tee-Object -FilePath build-log.txt",
+          "options": { "shell": { "executable": "powershell.exe", "args": ["-NoProfile", "-Command"] } }
+        },
+        "problemMatcher": []
+      }
+    ]
+  },
+  "extensions": {
+    "recommendations": [
+      "vscjava.vscode-java-pack",
+      "vscjava.vscode-gradle"
+    ]
+  }
+}

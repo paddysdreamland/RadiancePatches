@@ -1,0 +1,129 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.148'
+    id 'idea'
+}
+
+tasks.named('wrapper', Wrapper).configure {
+    distributionType = Wrapper.DistributionType.BIN
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = mod_id
+}
+
+// Minecraft 1.21.1 runs on Java 21.
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+neoForge {
+    version = project.neo_version
+
+    parchment {
+        mappingsVersion = project.parchment_mappings_version
+        minecraftVersion = project.parchment_minecraft_version
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+// Radiance and Entity Texture Features are only needed while building.
+// They are never put inside the finished jar; players install them separately.
+// They are found by name in the modpack's mods folder, so renaming or updating them doesn't break the build.
+// (Files ending in .disabled are ignored.)
+def findModJar(String prefix, String niceName) {
+    def folder = file(project.property('modpack_mods_folder'))
+    def found = folder.exists() ? folder.listFiles().findAll { it.name.startsWith(prefix) && it.name.endsWith('.jar') } : []
+    if (found.isEmpty()) {
+        throw new GradleException("No ${niceName} jar found in ${folder}\nIt is needed to build this mod. Check modpack_mods_folder in gradle.properties.")
+    }
+    return found.sort { it.name }.first()
+}
+
+dependencies {
+    compileOnly files(findModJar('Radiance-', 'Radiance'))
+    compileOnly files(findModJar('entity_texture_features-', 'Entity Texture Features'))
+}
+
+// Fills in the ${...} placeholders inside neoforge.mods.toml.
+var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
+    var replaceProperties = [
+            minecraft_version      : minecraft_version,
+            minecraft_version_range: minecraft_version_range,
+            neo_version            : neo_version,
+            loader_version_range   : loader_version_range,
+            mod_id                 : mod_id,
+            mod_name               : mod_name,
+            mod_authors            : mod_authors,
+            mod_license            : mod_license,
+            mod_version            : mod_version,
+    ]
+    inputs.properties replaceProperties
+    expand replaceProperties
+    from "src/main/templates"
+    into "build/generated/sources/modMetadata"
+}
+sourceSets.main.resources.srcDir generateModMetadata
+neoForge.ideSyncTask generateModMetadata
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+// The license goes inside the jar too.
+tasks.named('jar', Jar) {
+    from('LICENSE')
+}
+
+// Older single-fix jars that this mod replaces. The copy task moves them out of the mods folder.
+def replacedFixJars = ['radiance-veil-fix', 'radiance-texid-fix', 'radiance-emf-fix', 'radiance-stage-fix', 'radiance_fixes-']
+
+// Builds the jar and copies it into the modpack's mods folder
+// (the folder is set at the top of gradle.properties).
+// Older versions of this mod are removed, and the old single-fix jars are moved into
+// a folder called "old-radiance-fix-jars" next to the mods folder.
+tasks.register('copyToModpack') {
+    group = 'radiance patches'
+    description = 'Builds the mod and copies the jar into your modpack.'
+    dependsOn tasks.named('jar')
+    doLast {
+        def target = file(project.property('modpack_mods_folder'))
+        if (!target.exists()) {
+            throw new GradleException("Modpack mods folder not found: ${target}\nCheck modpack_mods_folder in gradle.properties.")
+        }
+        def jarFile = tasks.named('jar').get().archiveFile.get().asFile
+        target.listFiles().findAll { it.name.startsWith("${mod_id}-") && it.name.endsWith('.jar') }.each { it.delete() }
+
+        def oldJars = target.listFiles().findAll { f -> f.name.endsWith('.jar') && replacedFixJars.any { f.name.startsWith(it) } }
+        if (!oldJars.isEmpty()) {
+            def backup = new File(target.parentFile, 'old-radiance-fix-jars')
+            backup.mkdirs()
+            oldJars.each { f ->
+                def moved = new File(backup, f.name)
+                if (moved.exists()) { moved.delete() }
+                if (f.renameTo(moved)) {
+                    println "Moved old fix jar out of the mods folder: ${f.name}"
+                }
+            }
+        }
+
+        copy {
+            from jarFile
+            into target
+        }
+        println "Copied ${jarFile.name} into ${target}"
+    }
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}

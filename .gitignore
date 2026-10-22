@@ -1,0 +1,16 @@
+# Gradle / build output
+.gradle/
+build/
+out/
+run/
+run-data/
+repo/
+
+# IDE files
+.idea/
+*.iml
+bin/
+.classpath
+.project
+.settings/
+build-log.txt
