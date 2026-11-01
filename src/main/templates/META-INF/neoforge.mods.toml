@@ -18,6 +18,15 @@ Each fix can be turned off in config/radiance_patches.properties.
 - Block entities: no crash when the list of block entities changes while Radiance reads it
 - Modded villagers: profession and level layers from mods no longer hide under the base skin
 - PBR maps: _s, _n and _f maps also work for textures in blockentity, block_entity, ctm, liquid and fluid folders
+- Armor glint: enchanted armor gets the moving glint instead of a solid purple layer
+- Overlay layers: glowing and other extra layers on mobs stay on top of the skin instead of bleeding through
+- Glow layers: mob eyes, emissive overlays and modded glowing layers glow by themselves like in vanilla
+- Emissive faces: block and item faces that models mark as glowing really glow
+- Modded fluids: use their own textures and colour instead of looking like water
+- Dimension profiles: shader packs can give dimensions like TARDIS interiors their own sky
+- Lava marker: lets shader packs recognise lava (Advanced Patches: procedural lava)
+- Lava shore edges: lets shader packs darken lava along walls (Advanced Patches: Shore Darkening)
+- First-person arm marker: lets shader packs tell the arm apart from the held item (Advanced Patches: Hand Opacity)
 
 A Paddy's Dreamland™ mod. Not affiliated with the Radiance team.
 '''

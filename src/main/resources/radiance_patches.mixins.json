@@ -13,7 +13,19 @@
     "emf.EMFModelPartMixin",
     "radiance.EntityProxyStageMixin",
     "radiance.EntityProxyPatchMixin",
-    "radiance.AuxiliaryTexturesMixin"
+    "radiance.AuxiliaryTexturesMixin",
+    "glint.HumanoidArmorLayerMixin",
+    "radiance.EntityLayerOrderMixin",
+    "radiance.GlowLayersMixin",
+    "emissive.ModelBlockRendererMixin",
+    "emissive.ItemRendererMixin",
+    "emissive.PBRVertexConsumerEmissiveMixin",
+    "emissive.GlowFinderMixin",
+    "fluid.BlockRenderDispatcherMixin",
+    "fluid.LavaShoreMixin",
+    "fluid.PBRVertexConsumerShoreMixin",
+    "hand.PlayerHandMarkerMixin",
+    "radiance.BufferProxyDimensionMixin"
   ],
   "injectors": {
     "defaultRequire": 1

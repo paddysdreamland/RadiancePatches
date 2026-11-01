@@ -154,15 +154,11 @@ public final class StageModelCapture {
         return true;
     }
 
-    /** The render type's own name ("entity_cutout", "overpressure_curve_tube", ...), not its full state. */
+    /** The render type's own name ("entity_cutout", "overpressure_curve_tube", ...), read directly. */
     private static String renderTypeName(RenderType layer) {
-        String text = layer.toString();
-        int start = text.indexOf('[');
-        int end = text.indexOf(':');
-        if (text.startsWith("RenderType[") && start >= 0 && end > start) {
-            return text.substring(start + 1, end);
-        }
-        return text;
+        // Read the name field directly. Asking a render type to describe itself (toString) is not safe:
+        // some mods' render types touch the graphics system while doing that, which crashes off the render thread.
+        return layer.name;
     }
 
     /** True for render types that ignore depth (x-ray style highlights); those stay as an overlay. */
