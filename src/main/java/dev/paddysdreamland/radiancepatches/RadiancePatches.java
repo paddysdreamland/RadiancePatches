@@ -15,6 +15,9 @@ public final class RadiancePatches {
     private static Boolean radianceLoaded;
 
     public RadiancePatches() {
+        if (RadiancePatchesConfig.isEnabled(RadiancePatchesConfig.MEMORY_TRACKER)) {
+            dev.paddysdreamland.radiancepatches.memory.MemoryTracker.start();
+        }
     }
 
     /** True when Radiance is installed. Checked once, then remembered. */
