@@ -31,7 +31,23 @@ public final class RadiancePatchesMixinPlugin implements IMixinConfigPlugin {
         Map.entry("fluid.LavaShoreMixin", RadiancePatchesConfig.LAVA_SHORE),
         Map.entry("fluid.PBRVertexConsumerShoreMixin", RadiancePatchesConfig.LAVA_SHORE),
         Map.entry("hand.PlayerHandMarkerMixin", RadiancePatchesConfig.ARM_MARKER),
-        Map.entry("radiance.BufferProxyDimensionMixin", RadiancePatchesConfig.DIMENSION_PROFILES_SWITCH)
+        Map.entry("radiance.BufferProxyDimensionMixin", RadiancePatchesConfig.DIMENSION_PROFILES_SWITCH),
+        Map.entry("radiance.GeometryTypeFallbackMixin", RadiancePatchesConfig.UNKNOWN_TRANSPARENCY),
+        Map.entry("slabbed.SlabSupportCopycatsMixin", RadiancePatchesConfig.SLABBED_COPYCATS),
+        Map.entry("radiance.ChunkBufferLeakMixin", RadiancePatchesConfig.CHUNK_BUFFER_LEAK),
+        Map.entry("particle.ParticleMapsMixin", RadiancePatchesConfig.PARTICLE_MAPS),
+        Map.entry("radiance.ParticleCullingMixin", RadiancePatchesConfig.PARTICLE_CULLING),
+        Map.entry("knightlib.AnimatedTextureMixin", RadiancePatchesConfig.KNIGHTLIB_TEXTURES),
+        Map.entry("knightlib.AnimationUploadMixin", RadiancePatchesConfig.KNIGHTLIB_TEXTURES),
+        Map.entry("memory.ByteBufferBuilderTrackerMixin", RadiancePatchesConfig.MEMORY_TRACKER),
+        Map.entry("memory.TransferredBuildBufferTrackerMixin", RadiancePatchesConfig.MEMORY_TRACKER)
+    );
+
+    /** Mixins that patch another mod, and that mod's id. They are left out when that mod isn't installed. */
+    private static final Map<String, String> MOD_FOR_MIXIN = Map.of(
+        "slabbed.SlabSupportCopycatsMixin", "slabbed",
+        "knightlib.AnimatedTextureMixin", "knightlib",
+        "knightlib.AnimationUploadMixin", "knightlib"
     );
 
     @Override
@@ -51,8 +67,25 @@ public final class RadiancePatchesMixinPlugin implements IMixinConfigPlugin {
             return RadiancePatchesConfig.isEnabled(RadiancePatchesConfig.BLOCK_ENTITY_CRASH)
                 || RadiancePatchesConfig.isEnabled(RadiancePatchesConfig.MODDED_VILLAGER_LAYERS);
         }
+        if (shortName.equals("particle.ParticleGlowMixin")) {
+            // Moves particles for both particle fixes; each one checks its own switch at runtime.
+            return RadiancePatchesConfig.isEnabled(RadiancePatchesConfig.PARTICLE_GLOW)
+                || RadiancePatchesConfig.isEnabled(RadiancePatchesConfig.PARTICLE_MAPS);
+        }
+        String mod = MOD_FOR_MIXIN.get(shortName);
+        if (mod != null && !isModInstalled(mod)) {
+            return false;
+        }
         String fix = FIX_FOR_MIXIN.get(shortName);
         return fix == null || RadiancePatchesConfig.isEnabled(fix);
+    }
+
+    private static boolean isModInstalled(String modId) {
+        try {
+            return net.neoforged.fml.loading.LoadingModList.get().getModFileById(modId) != null;
+        } catch (Throwable error) {
+            return false;
+        }
     }
 
     @Override

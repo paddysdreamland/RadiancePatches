@@ -25,7 +25,20 @@
     "fluid.LavaShoreMixin",
     "fluid.PBRVertexConsumerShoreMixin",
     "hand.PlayerHandMarkerMixin",
-    "radiance.BufferProxyDimensionMixin"
+    "radiance.BufferProxyDimensionMixin",
+    "radiance.GeometryTypeFallbackMixin",
+    "slabbed.SlabSupportCopycatsMixin",
+    "radiance.ChunkBufferLeakMixin",
+    "particle.ParticleAccessor",
+    "particle.TextureSheetParticleAccessor",
+    "particle.EntityProxyAccessor",
+    "particle.ParticleGlowMixin",
+    "particle.ParticleMapsMixin",
+    "radiance.ParticleCullingMixin",
+    "knightlib.AnimatedTextureMixin",
+    "knightlib.AnimationUploadMixin",
+    "memory.ByteBufferBuilderTrackerMixin",
+    "memory.TransferredBuildBufferTrackerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
