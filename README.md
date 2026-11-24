@@ -19,17 +19,8 @@ A bundle of fixes for [Radiance](https://github.com/Minecraft-Radiance/Radiance)
 | Chunk Buffer Leak | `chunk_buffer_leak_fix` | RAM no longer climbs by a few hundred MB on every dimension change, render distance or video settings change, F3+A or resource reload. Radiance replaced its chunk-building threads without freeing the old threads' native vertex buffers. |
 | Modded Villager Layers | `modded_villager_layers_fix` | Profession and level layers of modded villagers no longer hide under the base skin. |
 | Extra PBR Folders | `extra_pbr_folders_fix` | `_s`, `_n` and `_f` maps also work for textures in `textures/blockentity`, `block_entity`, `ctm`, `liquid` and `fluid` (TARDIS Refined consoles, Mekanism, Create and others). |
-| Extra Map Folders | `extra_map_roots` | `_s` and `_n` maps also work for textures that mods keep outside the `textures` folder (Mekanism's `render` folder). Comma-separated for more folders. |
-| Armor Glint | `armor_glint_fix` | Enchanted armor gets Radiance's moving glint instead of a solid, unmoving purple layer. |
-| Overlay Layers | `overlay_layers_fix` | Extra layers on top of a mob's skin (glowing eyes, emissive patterns, clothes) always stay on top instead of randomly hiding under it and glowing through. |
-| Glow Layers | `glow_layers_fix`, `glow_layers_strength` | Layers that are drawn to glow glow by themselves, no emission maps needed: mob eyes, the Warden's spots, TARDIS Refined's shell lights, and mod render types with "glowing" or "emissive" in their name (Create's Wand of Symmetry). Transparency sets the glow strength. |
-| Emissive Faces | `emissive_faces_fix`, `emissive_faces_strength` | Block and item faces that models mark as glowing (`"block_light"` in the model JSON, used by Undergarden's shimmerweed and others) really glow, no emission maps needed. |
-| Modded Fluids | `modded_fluids_fix` | Radiance draws every fluid except lava with water's textures and colour. Modded fluids get their own back, so their resource-pack maps work, and they stop counting as water. |
-| Dimension Profiles | `dimension_profiles_fix`, `dimension_profiles` | Tells the shader pack which dimension you're in, so it can give dimensions their own sky. Default: TARDIS Refined interiors. |
-| Lava Marker | (always on) | Marks lava so shader packs can recognise it. Other shader packs ignore it. |
-| Lava Shore Edges | `lava_shore_edges` | Lava remembers which blocks next to it are walls, so the shader pack can darken lava along the shore. |
-| Glow Finder | `glow_finder` (off by default) | A tool that lists every texture mods draw at full brightness on purpose in `logs/radiance_patches_glow_finder.txt`, and whether it still needs an emission map. Use it somewhere enclosed with no sky above. |
-
-Dimension Profiles, Lava Marker and Lava Shore Edges only do something with a shader pack that uses them, such as [Advanced Patches](link).
+| Particle Culling | `particle_culling_fix` | Less lag when lots of blocks break at once (Vein Miner, tree felling). Radiance rebuilt every particle every frame, including the ones behind you; particles outside the view are now skipped like in NeoForge. |
+| Particle Glow | `particle_glow_fix` | Particles that light themselves up (flames, lava sparks, end rods, soul fire, glow squid sparkles, sculk souls, explosions) are ray-traced and really glow, instead of being painted flat on top of the final render. Brightness is set with `particle_glow_strength`. |
+| Particle Maps | `particle_maps_fix` | `_s`, `_n` and `_f` maps also work for particles in `textures/particle` and `textures/particles`. Particles with maps are ray-traced so the whole map applies, not just its glow. |
 
 Not affiliated with the Radiance team.
